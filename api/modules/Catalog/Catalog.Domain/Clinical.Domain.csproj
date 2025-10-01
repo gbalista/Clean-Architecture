@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Clinical.Domain</RootNamespace>
+    <AssemblyName>Clinical.Domain</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\framework\Core.DataAccess\Core.DataAccess.csproj" />
+    <ProjectReference Include="..\..\..\framework\Core.IAM\Core.IAM.csproj" />
+    <ProjectReference Include="..\..\..\framework\Core\Core.csproj" />
+  </ItemGroup>
+</Project>

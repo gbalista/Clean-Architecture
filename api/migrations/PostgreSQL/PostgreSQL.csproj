@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>CleanArch.WebApi.Migrations.PostgreSQL</RootNamespace>
+    <AssemblyName>CleanArch.WebApi.Migrations.PostgreSQL</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\modules\Catalog\Catalog.Infrastructure\Clinical.Persistence.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Clinical\" />
+    <Folder Include="Identity\" />
+    <Folder Include="Tenant\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

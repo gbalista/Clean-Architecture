@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Clinical.Presentation</RootNamespace>
+    <AssemblyName>Clinical.Presentation</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Carter" />
+  </ItemGroup>
+  <ItemGroup>        
+    <ProjectReference Include="..\..\..\framework\Core.IAM\Core.IAM.csproj" />
+    <ProjectReference Include="..\..\..\framework\Core\Core.csproj" />
+    <ProjectReference Include="..\Catalog.Application\Clinical.Application.csproj" />
+    <ProjectReference Include="..\Catalog.Infrastructure\Clinical.Persistence.csproj" />
+  </ItemGroup>
+</Project>

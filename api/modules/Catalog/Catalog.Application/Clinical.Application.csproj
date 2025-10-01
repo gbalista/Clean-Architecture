@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Clinical.Application</RootNamespace>
+    <AssemblyName>Clinical.Application</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Catalog.Domain\Clinical.Domain.csproj" />
+  </ItemGroup>
+</Project>

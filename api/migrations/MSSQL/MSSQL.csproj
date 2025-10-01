@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>CleanArch.WebApi.Migrations.MSSQL</RootNamespace>
+    <AssemblyName>CleanArch.WebApi.Migrations.MSSQL</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Clinical\20241123030623_Add Clinical Schema.cs" />
+    <Compile Remove="Clinical\20241123030623_Add Clinical Schema.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\modules\Catalog\Catalog.Infrastructure\Clinical.Persistence.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Clinical\" />
+    <Folder Include="Identity\" />
+    <Folder Include="Tenant\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
