@@ -1,30 +1,33 @@
-# 🧱 Clean Architecture API Starter (.NET 9 + EF Core + Multitenancy)
+# 🧱 Clean Architecture API Starter (.NET 9 + EF Core + DDD + Multitenancy)
 
-Este repositório apresenta uma arquitetura moderna baseada nos princípios de **Clean Architecture**, totalmente modular e extensível, preparada para aplicações empresariais complexas.
+Este repositório apresenta uma arquitetura moderna baseada nos princípios de **Clean Architecture** e **Domain-Driven Design (DDD)**, totalmente modular e extensível, preparada para aplicações empresariais reais com suporte a **multitenancy**, **cache distribuído (Redis)**, **múltiplos bancos** e outros recursos avançados.
 
 Desenvolvido com:
 - ✅ .NET 9 Preview + ASP.NET Core
 - ✅ Entity Framework Core 9
-- ✅ Suporte a múltiplos bancos: PostgreSQL e SQL Server
-- ✅ Autenticação e Autorização com Identity + JWT + Role Claims
-- ✅ Multi-Tenant (com banco compartilhado)
+- ✅ Domain-Driven Design (DDD) com Events e Separation of Concerns
+- ✅ Multi-Tenant (banco compartilhado)
+- ✅ Suporte a PostgreSQL e SQL Server
 - ✅ Modularização completa por contexto de negócio (ex: Clinical, Identity, etc)
-- ✅ Boas práticas: CORS, Swagger, Validation, Logging, Background Jobs
+- ✅ Redis Cache distribuído
+- ✅ Rate Limiting via middleware
+- ✅ Boas práticas: CORS, Swagger, Logging, Background Jobs, FluentValidation
+- ✅ Suporte a eventos de domínio com handlers desacoplados  
 
 ---
 
 ## 🔧 Funcionalidades Principais
 
-- Autenticação com Identity e JWT
-- Autorização baseada em Claims e Roles (RoleClaims / UserClaims)
-- Suporte a Multi-Tenant com banco compartilhado
-- CORS configurado globalmente
-- Swagger com versionamento de API
-- Jobs assíncronos com Hangfire
-- Validações com FluentValidation + validação automática
-- Modularização por contexto de negócio
-- Suporte a migrações separadas por banco (PostgreSQL e SQL Server)
+- Autenticação com Identity + JWT
 - Controle de acesso por escopos/permissões (Claims)
+- Suporte completo a Multi-Tenant com banco compartilhado
+- Modularização por vertical slice (contextos de negócio desacoplados)
+- Jobs e tarefas assíncronas com Hangfire
+- Redis integrado como provedor de cache
+- Rate Limiting configurável via appsettings
+- Validações com FluentValidation + validação automática
+- Logging estruturado com Serilog
+- Suporte a migrações separadas por banco e módulo (PostgreSQL e SQL Server)
 - Persistência com EF Core 9 e Fluent Mapping
 - Background Services e Scheduled Jobs prontos para uso
 
@@ -32,23 +35,19 @@ Desenvolvido com:
 
 ## 🧱 Estrutura de Projeto
 
-A estrutura segue uma divisão em **módulos independentes**, cada um com suas camadas internas:
+O projeto é organizado em **módulos independentes**, cada um seguindo as camadas do DDD:
 
 ```text
 Modules/
 ├── Clinical/
-│   ├── Application/      # Casos de uso (Commands, Queries, Handlers)
-│   ├── Domain/           # Entidades, Interfaces, Eventos de domínio
-│   ├── Infrastructure/   # Persistência, serviços externos
-│   └── Endpoints/        # Controllers e rotas da API
+│   ├── Domain/           # Entidades, Interfaces, Eventos de Domínio
+│   ├── Application/      # UseCases, Commands, Queries, Handlers
+│   ├── Infrastructure/   # Persistência (EF Core), serviços externos
+│   └── Endpoints/        # Controllers da API (MapEndpoints)
 ├── Identity/
 ├── Catalog/
 └── ... outros módulos ...
 ```
-
-Esses módulos seguem o padrão **vertical slice** e podem ser usados, substituídos ou removidos independentemente.
-
----
 
 ## 🔄 Adicionando Novos Módulos
 
@@ -61,6 +60,16 @@ Este projeto serve como base — você pode adicionar novos módulos (ex: **Fina
 
 ---
 
+## 🧵 DDD e Eventos de Domínio
+
+O projeto implementa DDD na prática, com suporte a **eventos de domínio**:
+
+- Eventos definidos em `Application/<module>/Events/`
+- `DomainEventHandlers` reagem a mudanças importantes no domínio (ex: novo paciente cadastrado)
+- Uso de `DomainEvent` + `IEventHandler<T>` para manter lógica isolada
+
+---
+
 ## 🏗️ Multi-Tenant
 
 - Suporte nativo a multi-tenant com banco compartilhado
@@ -70,9 +79,14 @@ Este projeto serve como base — você pode adicionar novos módulos (ex: **Fina
 
 ---
 
-## 💾 Banco de Dados
+## 🗃️ Banco de Dados
 
-**Exemplo de configuração em `appsettings.json`:**
+Suporte nativo a:
+
+- PostgreSQL
+- SQL Server
+
+**Exemplo de configuração (`appsettings.json`):**
 
 ```json
 "DatabaseOptions": {
@@ -80,7 +94,6 @@ Este projeto serve como base — você pode adicionar novos módulos (ex: **Fina
   "ConnectionString": "Host=localhost;Database=MyDb;Username=postgres;Password=..."
 }
 ```
-
 Bancos suportados:
 
 - PostgreSQL
@@ -116,16 +129,38 @@ A troca entre bancos é feita dinamicamente via configuração.
 
 ---
 
-## 🚀 Como Começar
+## 📦 Estrutura da Pasta `Framework`
+
+A pasta `Framework/` centraliza as funcionalidades compartilhadas que servem como base comum para todos os módulos. Ela foi organizada em subprojetos para manter uma separação clara de responsabilidades e facilitar a manutenção:
+
+```
+Framework/
+├── Core/                # Entidades base, contratos, resultados, serviços e exceções comuns
+├── Core.IAM/            # Gerenciamento de autenticação/autorização, claims, permissões e identidades
+├── Core.Persistence/    # Abstrações e extensões para integração com EF Core
+├── Infrastructure/      # Configuração geral da infraestrutura (CORS, cache, validações, serviços)
+```
+
+**Resumo das responsabilidades:**
+
+- `Core`: Tudo que é genérico e pode ser reutilizado por qualquer módulo. Contém interfaces, abstrações, helpers e tipos base.
+- `Core.IAM`: Foco em Identity e Authorization. Contém classes de claim, permissões, roles e helpers de autenticação.
+- `Core.Persistence`: Reúne extensões e utilitários que facilitam a configuração e uso de EF Core e bancos de dados.
+- `Infrastructure`: Configurações compartilhadas como CORS, cache, medição de tempo de requisição, health checks, etc.
+
+Essa estrutura permite que qualquer módulo (como `Clinical`, `Catalog`, `Identity`) aproveite esses recursos sem duplicação de código, promovendo reutilização e manutenção eficiente.
+
+---
+
+## 🚀 Para Rodar
 
 ```bash
-# 1. Restaurar dependências
 dotnet restore
 
-# 2. Gerar migrações (Postgre ou SQL Server)
+# Para PostgreSQL
 dotnet ef migrations add Initial_Clinical_PostgreSQL -c ClinicalDbContext -o Migrations/PostgreSQL/Clinical
 
-# 3. Rodar a aplicação
+# Rodar a aplicação
 dotnet run --project src/Presentation/WebApi
 ```
 
@@ -133,42 +168,50 @@ dotnet run --project src/Presentation/WebApi
 
 ## 🧠 Boas Práticas Aplicadas
 
-- Clean Architecture e Injeção de Dependência (DI)
-- Modularidade por domínio de negócio
-- Separação clara entre camadas
-- Respeito ao princípio SOLID
-- Logging estruturado
-- Startup desacoplada e configurável
-- Modularização via `Assembly` + `IServiceCollection` + `MapEndpoints()`
+- ✅ Clean Architecture e separação de responsabilidades
+- ✅ DDD com Domain Events e Interfaces
+- ✅ Modularização total (cada módulo é isolado)
+- ✅ Startup leve e extensível com MapEndpoints()
+- ✅ Suporte a migrações modulares
+- ✅ Autenticação centralizada + Claims por Roles
+- ✅ Logs com Serilog e rate limit configurável
+- ✅ HealthChecks, Swagger, CORS
+- ✅ Eventos de domínio com handlers isolados  
+- ✅ Cache distribuído com Redis integrado
 
 ---
 
-## 📁 Estrutura Geral
-
-```text
-src/
-├── Core/                    # Contratos, tipos comuns e abstrações
-├── Shared/                  # Utilitários, DTOs e constantes globais
-├── Infrastructure/          # Serviços cross-cutting (cache, e-mail, sms...)
-├── Presentation/WebApi/     # Startup da aplicação + Middlewares
-├── Migrations/              # Migrations separadas por banco e contexto
-│   ├── MSSQL/
-│   └── PostgreSQL/
-└── Modules/                 # Módulos desacoplados (Clinical, Identity...)
-```
+## 🧰 Tecnologias e Patterns Usados
+- ASP.NET Core 9 com Minimal APIs e DI
+- Entity Framework Core 9 com separação por contexto
+- Domain-Driven Design (DDD)
+- Clean Architecture
+- CQRS (Commands / Queries)
+- Event-driven Domain Model
+- Modular Monolith com vertical slice
+- Hangfire para background jobs
+- Redis para cache
+- Serilog para logging estruturado
 
 ---
 
 ## 📚 Contribuindo
 
-Sinta-se à vontade para abrir issues, PRs ou forks. Este projeto pode servir como **base para novos sistemas empresariais**, plataformas SaaS e ERPs modulares.
+Esse projeto pode ser usado como base para:
+
+- Novas aplicações empresariais
+- Plataformas SaaS multi-tenant
+- APIs modulares extensíveis
+- Portais de gestão com múltiplos domínios
+
+Pull requests e sugestões são bem-vindas!
 
 ---
 
-## 🧑‍💻 Autor
+## 👨‍💻 Autor
 
-Desenvolvido por [Gustavo Balista](https://www.linkedin.com/in/gustavobalista/)
+Desenvolvido por [Gustavo Balista](https://www.linkedin.com/in/gustavobalista)
 
 ---
 
-**⭐ Se este repositório te ajudou, não esqueça de deixar uma estrela!**
+**⭐ Deixe sua estrela se esse repositório te ajudou!**
