@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using Asp.Versioning.Conventions;
 using Carter;
-using ClArch.Starter.WebApi.Catalog.Infrastructure;
 using FluentValidation;
 using Clinical.Application;
+using ClArch.Starter.WebApi.Clinical.Infrastructure;
 
 namespace ClArch.WebApi.Host;
 

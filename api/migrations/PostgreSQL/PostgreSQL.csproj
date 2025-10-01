@@ -4,7 +4,7 @@
     <AssemblyName>CleanArch.WebApi.Migrations.PostgreSQL</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\modules\Catalog\Catalog.Infrastructure\Clinical.Persistence.csproj" />
+    <ProjectReference Include="..\..\modules\Clinical\Clinical.Infrastructure\Clinical.Persistence.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Clinical\" />

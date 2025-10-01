@@ -4,6 +4,6 @@
     <AssemblyName>Clinical.Application</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Catalog.Domain\Clinical.Domain.csproj" />
+    <ProjectReference Include="..\Clinical.Domain\Clinical.Domain.csproj" />
   </ItemGroup>
 </Project>

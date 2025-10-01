@@ -9,7 +9,7 @@
   <ItemGroup>        
     <ProjectReference Include="..\..\..\framework\Core.IAM\Core.IAM.csproj" />
     <ProjectReference Include="..\..\..\framework\Core\Core.csproj" />
-    <ProjectReference Include="..\Catalog.Application\Clinical.Application.csproj" />
-    <ProjectReference Include="..\Catalog.Infrastructure\Clinical.Persistence.csproj" />
+    <ProjectReference Include="..\Clinical.Application\Clinical.Application.csproj" />
+    <ProjectReference Include="..\Clinical.Infrastructure\Clinical.Persistence.csproj" />
   </ItemGroup>
 </Project>

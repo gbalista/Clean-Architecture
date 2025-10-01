@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Clinical.Persistence;
 
-namespace ClArch.Starter.WebApi.Catalog.Infrastructure;
+namespace ClArch.Starter.WebApi.Clinical.Infrastructure;
 public static class ClinicalModule
 {
     public class Endpoints : CarterModule
